@@ -1,267 +1,106 @@
-![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
+# n8n-nodes-fantasypl
 
-# n8n Community Node Template
+This is an n8n community node for the **Fantasy Premier League (FPL) API**. It allows you to integrate Official Fantasy Premier League data into your n8n workflows, automating manager notifications, gameweek performance tracking, transfer analysis, league standing digests, and custom football AI agents.
 
-Christopher Nelson's reusable starter for building and releasing verified [n8n](https://n8n.io) community nodes. It tracks n8n's official starter and adds a first-release checklist, automated release audit, and a GitHub Actions publishing path that works for both a brand-new npm package and later OIDC releases.
+[n8n](https://n8n.io/) is a fair-code licensed workflow automation platform.
 
-> [!IMPORTANT]
-> Replace this README with `README_TEMPLATE.md`, replace every `<...>` placeholder, and remove the example nodes you do not need before releasing. Run `npm run release:check` before creating any version tag.
+---
 
-## Quick Start
+## Installation
 
-> [!TIP]
-> **New to building n8n nodes?** The fastest way to get started is with `npm create @n8n/node`. This command scaffolds a complete node package for you using the [@n8n/node-cli](https://www.npmjs.com/package/@n8n/node-cli).
+Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
 
-**To create a new node package from scratch:**
+### Community Nodes Installation (UI)
 
-```bash
-npm create @n8n/node
-```
+1. Go to **Settings > Community Nodes** in your n8n instance.
+2. Select **Install**.
+3. Enter `n8n-nodes-fantasypl` in the **npm Package Name** field.
+4. Agree to the risks of community nodes and click **Install**.
 
-**Already using this starter? Start developing with:**
+### Manual Installation (Docker / Self-hosted)
 
-```bash
-npm run dev
-```
-
-This starts n8n with your nodes loaded and hot reload enabled.
-
-## What's Included
-
-This starter repository includes two example nodes to learn from:
-
-- **[Example Node](nodes/Example/)** - A simple starter node that shows the basic structure with a custom `execute` method
-- **[GitHub Issues Node](nodes/GithubIssues/)** - A complete, production-ready example built using the **declarative style**:
-  - **Low-code approach** - Define operations declaratively without writing request logic
-  - Multiple resources (Issues, Comments)
-  - Multiple operations (Get, Get All, Create)
-  - Two authentication methods (OAuth2 and Personal Access Token)
-  - List search functionality for dynamic dropdowns
-  - Proper error handling and typing
-  - Ideal for HTTP API-based integrations
-
-> [!TIP]
-> The declarative/low-code style (used in GitHub Issues) is the recommended approach for building nodes that interact with HTTP APIs. It significantly reduces boilerplate code and handles requests automatically.
-
-Browse these examples to understand both approaches, then modify them or create your own.
-
-## Finding Inspiration
-
-Looking for more examples? Check out these resources:
-
-- **[npm Community Nodes](https://www.npmjs.com/search?q=keywords:n8n-community-node-package)** - Browse thousands of community-built nodes on npm using the `n8n-community-node-package` tag
-- **[n8n Built-in Nodes](https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/nodes)** - Study the source code of n8n's official nodes for production-ready patterns and best practices
-- **[n8n Credentials](https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/credentials)** - See how authentication is implemented for various services
-
-These are excellent resources to understand how to structure your nodes, handle different API patterns, and implement advanced features.
-
-## Prerequisites
-
-Before you begin, install the following on your development machine:
-
-### Required
-
-- **[Node.js](https://nodejs.org/)** (v22 or higher) and npm
-  - Linux/Mac/WSL: Install via [nvm](https://github.com/nvm-sh/nvm)
-  - Windows: Follow [Microsoft's NodeJS guide](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows)
-- **[git](https://git-scm.com/downloads)**
-
-### Recommended
-
-- Follow n8n's [development environment setup guide](https://docs.n8n.io/integrations/creating-nodes/build/node-development-environment/)
-
-> [!NOTE]
-> The `@n8n/node-cli` is included as a dev dependency and will be installed automatically when you run `npm install`. The CLI includes n8n for local development, so you don't need to install n8n globally.
-
-## Getting Started with this Starter
-
-Follow these steps to create your own n8n community node package:
-
-### 1. Create Your Repository
-
-[Generate a new repository](https://github.com/christopherjnelson/n8n-community-node-template/generate) from this template, then clone it:
+In your n8n installation directory or custom Docker image:
 
 ```bash
-git clone https://github.com/<your-organization>/<your-repo-name>.git
-cd <your-repo-name>
+npm install n8n-nodes-fantasypl
 ```
 
-### 2. Install Dependencies
+---
 
-```bash
-npm install
-```
+## Operations
 
-This installs all required dependencies including the `@n8n/node-cli`.
+The node covers the entire Fantasy Premier League API across 7 primary resources:
 
-### 3. Explore the Examples
+### 1. General
+- **Get Bootstrap Data (`getBootstrapStatic`)**: Retrieve core overview data including all 20 Premier League teams, ~600+ players (elements), 38 gameweek events, positions (element types), phases, and game settings.
+- **Get Event Status (`getEventStatus`)**: Check the real-time processing status of the current gameweek, day's bonus point calculations (BPS), and league table updates.
 
-Browse the example nodes in [nodes/](nodes/) and [credentials/](credentials/) to understand the structure:
+### 2. Fixture
+- **Get Many (`getAll`)**: Retrieve all 380 fixtures for the Premier League season with kick-off times, teams, difficulty, and match status.
+- **Get by Gameweek (`getByGameweek`)**: Retrieve all 10 fixtures for a specific gameweek (1 to 38).
+- **Get Future / Past Fixtures (`getFuture`)**: Filter fixtures by upcoming status (`future=1`) or completed matches (`future=0`).
 
-- Start with [nodes/Example/](nodes/Example/) for a basic node
-- Study [nodes/GithubIssues/](nodes/GithubIssues/) for a real-world implementation
+### 3. Gameweek
+- **Get Live Data (`getLive`)**: Retrieve real-time live points, minutes, goals, assists, clean sheets, saves, bonus points, xG (expected goals), xA (expected assists), and match stats for all players in a specific gameweek.
+- **Get Dream Team (`getDreamTeam`)**: Retrieve the highest-scoring dream team lineup and top player of the gameweek.
 
-### 4. Build Your Node
+### 4. Player
+- **Get Summary (`getSummary`)**: Retrieve comprehensive player details by Player ID (element ID), including upcoming fixtures, match-by-match history for the current season, and past season career statistics.
 
-Edit the example nodes to fit your use case, or create new node files by copying the structure from [nodes/Example/](nodes/Example/).
+### 5. Manager
+- **Get Details (`get`)**: Retrieve manager profile by Entry ID, including team name, overall rank, total points, gameweek summary, regional ranks, kit, and joined classic/H2H leagues.
+- **Get History (`getHistory`)**: Retrieve gameweek-by-gameweek rank and point progression for the current season, past seasons history, and chips played (Wildcard, Free Hit, Triple Captain, Bench Boost).
+- **Get Gameweek Picks (`getPicks`)**: Retrieve manager team selection for a specific gameweek (15 players with captain, vice-captain, bench order, multipliers), active chip, and automatic substitutions.
+- **Get Transfers (`getTransfers`)**: Retrieve all player transfers made by the manager during the season with timestamps and point costs.
 
-> [!TIP]
-> If you want to scaffold a completely new node package, use `npm create @n8n/node` to start fresh with the CLI's interactive generator.
+### 6. League
+- **Get Classic Standings (`getClassicStandings`)**: Retrieve standings, rank changes, and manager scores for any classic league (e.g. `314` for the Overall league, or private mini-leagues). Supports pagination (`page_standings`, `page_new_entries`, `phase`).
+- **Get Head-to-Head Standings (`getH2HStandings`)**: Retrieve standings and details for any H2H league.
+- **Get Head-to-Head Matches (`getH2HMatches`)**: Retrieve head-to-head match fixtures, matchups, and scores for a specific gameweek.
 
-### 5. Configure Your Package
+### 7. Custom API Call
+- **Custom API Call (`customApiCall`)**: Send arbitrary HTTP requests (`GET`, `POST`, `PUT`, `DELETE`, `PATCH`) to any official or unofficial FPL API endpoint (e.g. `set-piece-notes/`, `me/`, `my-team/`) with custom query parameters and request bodies.
 
-Update `package.json` with your details:
+---
 
-- `name` - Your package name (must start with `n8n-nodes-`)
-- `author` - Your name and email
-- `repository` - Your repository URL
-- `description` - What your node does
+## Credentials
 
-Make sure your node is registered in the `n8n.nodes` array.
+### Public Endpoints (Default)
+Most Fantasy Premier League endpoints (fixtures, players, bootstrap, manager history, public leagues) are public and do not require authentication. Leave **Authentication** set to **None (Public Endpoints)**.
 
-### 6. Develop and Test Locally
+### Authenticated Endpoints (Optional)
+If you wish to access private endpoints (such as your current unreleased team or making transfers via API), configure the **Fantasy Premier League API** credential:
+1. Under **Authentication**, select **Session Cookie / Token**.
+2. Provide your FPL session cookie (e.g. `pl_profile` obtained from browser cookies when logged in at fantasy.premierleague.com).
+3. Optionally customize the `User-Agent` header.
 
-Start n8n with your node loaded:
+---
 
-```bash
-npm run dev
-```
+## Compatibility
 
-This command runs `n8n-node dev` which:
+- Tested with n8n version `1.0.0` and above.
+- Supports Node.js `>=22.22.0`.
+- Built using n8n declarative request routing with full support for n8n AI Agent tools (`usableAsTool: true`).
 
-- Builds your node with watch mode
-- Starts n8n with your node available
-- Automatically rebuilds when you make changes
-- Opens n8n in your browser (usually http://localhost:5678)
+---
 
-You can now test your node in n8n workflows!
+## Usage
 
-> [!NOTE]
-> Learn more about CLI commands in the [@n8n/node-cli documentation](https://www.npmjs.com/package/@n8n/node-cli).
+### Example Use Cases:
+- **Gameweek Recap Telegram / Slack Bot**: Trigger after gameweek deadlines or matches finish, fetch live points using `Gameweek > Get Live Data` and `Manager > Get Details`, and post automatic league updates.
+- **Price Change & Transfer Alerts**: Poll `General > Get Bootstrap Data` daily to track player `cost_change_event` and `selected_by_percent`.
+- **FPL AI Advisor Agent**: Attach this node as an AI tool to an n8n AI Agent node so the LLM can query player stats, upcoming fixture difficulty, and injury news on demand.
 
-### 7. Lint Your Code
-
-Check for errors:
-
-```bash
-npm run lint
-```
-
-Auto-fix issues when possible:
-
-```bash
-npm run lint:fix
-```
-
-### 8. Build for Production
-
-When ready to publish:
-
-```bash
-npm run build
-```
-
-This compiles your TypeScript code to the `dist/` folder.
-
-### 9. Prepare for Publishing
-
-Before publishing:
-
-1. **Update documentation**: Replace this README with your node's documentation. Use [README_TEMPLATE.md](README_TEMPLATE.md) as a starting point.
-2. **Update the LICENSE**: Add your details to the [LICENSE](LICENSE.md) file.
-3. **Test thoroughly**: Ensure your node works in different scenarios.
-
-### 10. Publish to npm
-
-Publishing is handled automatically by the included GitHub Actions workflow ([.github/workflows/publish.yml](.github/workflows/publish.yml)). It runs on every version tag push and publishes to npm with a provenance attestation — a requirement for n8n community nodes starting May 1, 2026.
-
-#### One-time setup
-
-Read [RELEASING.md](RELEASING.md) before the first tag. npm cannot configure a Trusted Publisher until the package already exists.
-
-For the first `0.1.0` publication, create a temporary granular npm token, store it as the GitHub Actions secret `NPM_TOKEN`, and let `publish.yml` publish from GitHub Actions with provenance. After `0.1.0` exists, configure npm Trusted Publishing with:
-
-- **Repository owner**: your GitHub username or org
-- **Repository name**: your repo name
-- **Workflow name**: `publish.yml`
-
-Then remove the GitHub secret and revoke the temporary token. Future releases use GitHub OIDC and require no long-lived publishing secret.
-
-> [!NOTE]
-> If the package already exists on npm before its first release from this repository, configure the Trusted Publisher first and skip the temporary token.
-
-#### Releasing a new version
-
-```bash
-npm run release
-```
-
-This lints, builds, prompts for a version bump, updates the changelog, commits, tags, and pushes — which triggers the workflow to publish to npm.
-
-### 11. Submit for Verification (Optional)
-
-Get your node verified for n8n Cloud:
-
-1. Ensure your node meets the [requirements](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/):
-   - Uses MIT license ✅ (included in this starter)
-   - No external package dependencies
-   - Follows n8n's design guidelines
-   - Passes quality and security review
-
-2. Submit through the [n8n Creator Portal](https://creators.n8n.io/nodes)
-
-**Benefits of verification:**
-
-- Available directly in n8n Cloud
-- Discoverable in the n8n nodes panel
-- Verified badge for quality assurance
-- Increased visibility in the n8n community
-
-## Available Scripts
-
-This starter includes several npm scripts to streamline development:
-
-| Script                | Description                                                                 |
-| --------------------- | --------------------------------------------------------------------------- |
-| `npm run dev`         | Start n8n with your node and watch for changes (runs `n8n-node dev`)        |
-| `npm run build`       | Compile TypeScript to JavaScript for production (runs `n8n-node build`)     |
-| `npm run build:watch` | Build in watch mode (auto-rebuild on changes)                               |
-| `npm run lint`        | Check your code for errors and style issues (runs `n8n-node lint`)          |
-| `npm run lint:fix`    | Automatically fix linting issues when possible (runs `n8n-node lint --fix`) |
-| `npm run release`     | Create a new release (runs `n8n-node release`)                              |
-
-> [!TIP]
-> These scripts use the [@n8n/node-cli](https://www.npmjs.com/package/@n8n/node-cli) under the hood. You can also run CLI commands directly, e.g., `npx n8n-node dev`.
-
-## Troubleshooting
-
-### My node doesn't appear in n8n
-
-1. Make sure you ran `npm install` to install dependencies
-2. Check that your node is listed in `package.json` under `n8n.nodes`
-3. Restart the dev server with `npm run dev`
-4. Check the console for any error messages
-
-### Linting errors
-
-Run `npm run lint:fix` to automatically fix most common issues. For remaining errors, check the [n8n node development guidelines](https://docs.n8n.io/integrations/creating-nodes/).
-
-### TypeScript errors
-
-Make sure you're using Node.js v22 or higher and have run `npm install` to get all type definitions.
+---
 
 ## Resources
 
-- **[n8n Node Documentation](https://docs.n8n.io/integrations/creating-nodes/)** - Complete guide to building nodes
-- **[n8n Community Forum](https://community.n8n.io/)** - Get help and share your nodes
-- **[@n8n/node-cli Documentation](https://www.npmjs.com/package/@n8n/node-cli)** - CLI tool reference
-- **[n8n Creator Portal](https://creators.n8n.io/nodes)** - Submit your node for verification
-- **[Submit Community Nodes Guide](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/)** - Verification requirements and process
+- [Official Fantasy Premier League](https://fantasy.premierleague.com/)
+- [Postman FPL API Collection](https://www.postman.com/fplassist/fpl-assist/collection/zqlmv01/fantasy-premier-league-api)
+- [n8n Community Node Documentation](https://docs.n8n.io/integrations/community-nodes/)
 
-## Contributing
-
-Have suggestions for improving this starter? [Open an issue](https://github.com/n8n-io/n8n-nodes-starter/issues) or submit a pull request!
+---
 
 ## License
 
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)
+[MIT](LICENSE.md)

@@ -1,19 +1,33 @@
 {
-	"name": "n8n-nodes-community-template",
+	"name": "n8n-nodes-fantasypl",
 	"version": "0.1.0",
-	"description": "Reusable starter package for verified n8n community nodes",
-	"license": "MIT",
-	"homepage": "https://github.com/christopherjnelson/n8n-community-node-template#readme",
+	"description": "n8n community node for Fantasy Premier League (FPL) API to access fixtures, players, managers, gameweek live stats, and league standings",
 	"keywords": [
-		"n8n-community-node-package"
+		"n8n-community-node-package",
+		"fantasy-premier-league",
+		"fpl",
+		"premier-league",
+		"football",
+		"soccer"
 	],
+	"license": "MIT",
+	"homepage": "https://github.com/christopherjnelson/n8n-nodes-fantasypl#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/christopherjnelson/n8n-nodes-fantasypl.git"
+	},
 	"author": {
 		"name": "Christopher J. Nelson",
 		"email": "christopherjnelson@proton.me"
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/christopherjnelson/n8n-community-node-template.git"
+	"engines": {
+		"node": ">=22.22.0"
+	},
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public"
 	},
 	"scripts": {
 		"build": "n8n-node build",
@@ -21,23 +35,18 @@
 		"dev": "n8n-node dev",
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
-		"release:check": "node scripts/release-check.mjs",
+		"prepublishOnly": "n8n-node prerelease",
 		"release": "n8n-node release",
-		"prepublishOnly": "n8n-node prerelease"
+		"release:check": "node scripts/release-check.mjs"
 	},
-	"files": [
-		"dist"
-	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"strict": true,
-		"credentials": [
-			"dist/credentials/GithubIssuesApi.credentials.js",
-			"dist/credentials/GithubIssuesOAuth2Api.credentials.js"
-		],
 		"nodes": [
-			"dist/nodes/GithubIssues/GithubIssues.node.js",
-			"dist/nodes/Example/Example.node.js"
+			"dist/nodes/FantasyPremierLeague/FantasyPremierLeague.node.js"
+		],
+		"credentials": [
+			"dist/credentials/FantasyPremierLeagueApi.credentials.js"
 		]
 	},
 	"devDependencies": {
@@ -49,11 +58,5 @@
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
-	},
-	"engines": {
-		"node": ">=22.22.0"
-	},
-	"publishConfig": {
-		"access": "public"
 	}
 }

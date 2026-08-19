@@ -1,0 +1,12 @@
+{
+	"node": "n8n-nodes-fantasypl.fantasyPremierLeague",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": [
+		"Miscellaneous",
+		"Data & Storage"
+	],
+	"resources": {
+		"primaryDocumentationUrl": "https://github.com/christopherjnelson/n8n-nodes-fantasypl#readme"
+	}
+}
